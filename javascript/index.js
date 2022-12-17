@@ -60,9 +60,9 @@ const mostrarProductos = () => {
 
 
         const boton = document.getElementById("boton  ${producto.id} ");
-        /*boton.addEventListener("click", () => {
+        boton.addEventListener("click", () => {
             agregarAlCarrito(producto.id)
-        });*/
+        });
     });
 }
 
@@ -80,7 +80,7 @@ const agregarAlCarrito = (id) => {
 const contenedorCarrito = document.getElementById("contenedorCarrito");
 
 const verCarrito = document.getElementById("verCarrito");
-/*
+
 verCarrito.addEventListener("click", () => {
     mostrarCarrito();
 });
@@ -101,6 +101,6 @@ const mostrarCarrito = () => {
 
         contenedorCarrito.appendChild(card);
     })
-}*/
+}
 
 mostrarProductos();
