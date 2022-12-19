@@ -38,32 +38,33 @@ const productos = [bikiniPalm, bikiniShell, bikiniTieDye, bikiniFruit, bikiniLea
 //Arry de Carrito de Compras
 let carrito = [];
 
+//carrito a LS
+if(localStorage.getItem("carrito")) {
+    carrito = JSON.parse(localStorage.getItem("carrito"));
+}
 //funcion que muestra productos
 const contenedorProductos = document.getElementById("contenedorProductos");
 
-//console.log(productos);
-
 const mostrarProductos = () => {
     productos.forEach( producto => {
-        const card = document.createElement("div");
+        let card = document.createElement("div");
         card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
         card.innerHTML = `
                     <div class ="card" style="min-width: 80px">
                         <img src= "${producto.img}" class ="card-img-top"  alt =" ${producto.nombre}">
                         <div class="card-body">
                             <h4 class="card-title"> ${producto.nombre}</h4>
-                            <h5 class="card-text">${producto.precio}</h5>
-                            <button class= "btn colorBoton" id="boton  ${producto.id} ">Agregar al carrito</button>        
+                            <h5 class="card-text">$ ${producto.precio}</h5>
+                            <button class= "btn colorBoton" id = "boton${producto.id}" >Agregar al carrito </button>        
                         </div>
                     </div>`
         contenedorProductos.appendChild(card);
 
-
-        const boton = document.getElementById("boton  ${producto.id} ");
+        const boton = document.getElementById(`boton${producto.id}`);
         boton.addEventListener("click", () => {
             agregarAlCarrito(producto.id)
         });
-    });
+    })
 }
 
 const agregarAlCarrito = (id) => {
@@ -71,11 +72,16 @@ const agregarAlCarrito = (id) => {
     if(productoEnCarrito){
         productoEnCarrito.cantidad++;
     } else {
-        const producto = producto.find(producto => producto.id === id);
+        const producto = productos.find(producto => producto.id === id);
         carrito.push(producto);
+        localStorage.setItem("carrito", JSON.stringify(carrito));
     }
-    console.log(carrito);
+    
+    calcularTotal();
+    //mostrarCarrito();
 }
+
+mostrarProductos();
 
 const contenedorCarrito = document.getElementById("contenedorCarrito");
 
@@ -86,21 +92,63 @@ verCarrito.addEventListener("click", () => {
 });
 
 const mostrarCarrito = () => {
+
+    contenedorCarrito.innerHTML = "";
+
     carrito.forEach(producto => {
         const card = document.createElement("div");
         card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
         card.innerHTML = `
-        <div class ="card" style="min-width: 80px">
-            <img src= "${producto.img}" class ="card-img-top"  alt =" ${producto.nombre}">
-            <div class="card-body">
-                <h4 class="card-title"> ${producto.nombre}</h4>
-                <h5 class="card-text">${producto.precio}</h5>
-                <button class= "btn colorBoton" id="eliminar  ${producto.id} ">Eliminar producto</button>        
-            </div>
-        </div>`
+                            <div class ="card" style="min-width: 80px">
+                                <img src= "${producto.img}" class ="card-img-top"  alt =" ${producto.nombre}">
+                                <div class="card-body">
+                                    <h4 class="card-title"> ${producto.nombre}</h4>
+                                    <h5 class="card-text">$ ${producto.precio}</h5>
+                                    <p> ${producto.cantidad} </p>
+                                    <button class= "btn colorBoton" id= "eliminar${producto.id}" >Eliminar producto</button>        
+                                </div>
+                            </div>`
 
         contenedorCarrito.appendChild(card);
-    })
+
+        const boton = document.getElementById(`eliminar${producto.id}`);
+        boton.addEventListener("click", () => {
+            eliminarDelCarrito(producto.id);
+        });
+    });
+    calcularTotal();
 }
 
-mostrarProductos();
+const eliminarDelCarrito = (id) => {
+    const producto = carrito.find( producto => producto.id === id);
+    const indice = carrito.indexOf(producto);
+    carrito.splice(indice, 1);
+
+    mostrarCarrito();
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+//vaciar carrito
+const vaciarCarrito = document.getElementById("vaciarTodoElCarrito");
+vaciarCarrito.addEventListener("click", () => {
+    eliminarTodoElCarrito();
+});
+const eliminarTodoElCarrito = () => {
+    carrito = [];
+    mostrarCarrito();
+
+    localStorage.clear();
+};
+
+//total compra
+
+const total = document.getElementById("total");
+
+const calcularTotal = () => {
+    let totalCompra = 0;
+    carrito.forEach(producto => {
+        totalCompra += producto.precio * producto.cantidad;
+    });
+    total.innerHTML = `$${totalCompra}`;
+}
