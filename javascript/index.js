@@ -48,7 +48,7 @@ const contenedorProductos = document.getElementById("contenedorProductos");
 const mostrarProductos = () => {
     productos.forEach( producto => {
         let card = document.createElement("div");
-        card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
+        card.classList.add("col-xl-3", "col-md-4", "col-sm-6", "col-6");
         card.innerHTML = `
                     <div class ="card" style="min-width: 80px">
                         <img src= "${producto.img}" class ="card-img-top"  alt =" ${producto.nombre}">
@@ -78,7 +78,6 @@ const agregarAlCarrito = (id) => {
     }
     
     calcularTotal();
-    //mostrarCarrito();
 }
 
 mostrarProductos();
@@ -97,19 +96,24 @@ const mostrarCarrito = () => {
 
     carrito.forEach(producto => {
         const card = document.createElement("div");
-        card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
+        card.classList.add("col-xl-3", "col-md-4", "col-sm-6", "col-6");
         card.innerHTML = `
-                            <div class ="card" style="min-width: 80px">
-                                <img src= "${producto.img}" class ="card-img-top"  alt =" ${producto.nombre}">
+                            <div class ="card" style="min-width: 80px width:auto ">
+                            <img src= "${producto.img}" class ="card-img-top"  alt =" ${producto.nombre}">
                                 <div class="card-body">
-                                    <h4 class="card-title"> ${producto.nombre}</h4>
+                                    <h4 class="card-title "> ${producto.nombre} (${producto.cantidad})</h4>
                                     <h5 class="card-text">$ ${producto.precio}</h5>
-                                    <p> ${producto.cantidad} </p>
-                                    <button class= "btn colorBoton" id= "eliminar${producto.id}" >Eliminar producto</button>        
+                                    <button type="button" class="btn btn-success" id= "sumar${producto.id}"> + </button>
+                                    <button type="button" class="btn btn-danger" id= "eliminar${producto.id}" > - </button>        
                                 </div>
                             </div>`
 
         contenedorCarrito.appendChild(card);
+
+        const btn = document.getElementById(`sumar${producto.id}`);
+        btn.addEventListener("click", () => {
+            agregarAlCarrito(producto.id);
+        });
 
         const boton = document.getElementById(`eliminar${producto.id}`);
         boton.addEventListener("click", () => {

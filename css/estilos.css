@@ -372,7 +372,17 @@ aside p {
 }
 .productoscarrito{
   height: auto;
+  padding: 10px;
 }
+.productoscarrito .row{
+  margin: 0px;
+  grid-row-gap: 20px;
+}
+#contenedorCarrito{
+  display: flex;
+  padding:10px;
+}
+
 .totalcompra{
   width: 1000px;
   height: auto;
